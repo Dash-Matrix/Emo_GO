@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
+using GameAnalyticsSDK;
 
 public class LevelManager : MonoBehaviour
 {
@@ -156,13 +157,25 @@ public class LevelManager : MonoBehaviour
 
     private void LogAnalyticData()
     {
-        string currentLevel = (SceneManager.GetActiveScene().buildIndex - 1).ToString();
+        Debug.Log("LEVEL FINSHED");
+        if (_emosRescued == 0)
+        {
+            // Debug.Log("LEVEL LOST : " + SceneManager.GetActiveScene().name);
+            GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail, SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            // Debug.Log("LEVEL WON: " + (_emosRescued * 100) / _totalEmos);
+            int score = (_emosRescued * 100) / _totalEmos;
+            GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, SceneManager.GetActiveScene().name, score);
+        }
 
-        AnalyticsResult resultLog = 
-            Analytics.CustomEvent("levelComplete", 
-                new Dictionary<string, object> { { "CurrentLevel_EmosRescued_TotalEmos",  currentLevel + "_" + _emosRescued.ToString() + "_" + _totalEmos } });
+        //string currentLevel = (SceneManager.GetActiveScene().buildIndex - 1).ToString();
 
-        Debug.Log(resultLog);
+        //AnalyticsResult resultLog = 
+        //    Analytics.CustomEvent("levelComplete", 
+        //        new Dictionary<string, object> { { "CurrentLevel_EmosRescued_TotalEmos",  currentLevel + "_" + _emosRescued.ToString() + "_" + _totalEmos } });
 
+        //Debug.Log(resultLog);
     }
 }

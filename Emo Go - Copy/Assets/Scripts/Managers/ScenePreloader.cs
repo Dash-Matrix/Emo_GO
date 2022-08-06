@@ -34,6 +34,8 @@ public class ScenePreloader : MonoBehaviour
             loadTime = minLoadTime;
         else
             loadTime = Time.time;
+
+        GameAnalyticsSDK.GameAnalytics.Initialize();
     }
 
     private void Update()
